@@ -58,7 +58,7 @@ export const useHome = () => {
     useEffect(()=>{
         if(!publicKey)return;
         IsAdmin()
-    }, [publicKey, IsAdmin])
+    }, [publicKey])
 
     return {IsAdmin}
 }
