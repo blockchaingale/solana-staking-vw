@@ -89,6 +89,7 @@ export const ApiMessage = () => {
         if(program === undefined || publicKey === null)return;
         let vaultPda = await calculateVaultDataPda();
         let stakeEntryPda = await calculateStakeEntryPda(publicKey);
+        let globalDataPda = await calculateGlobalDataPda();
         let stakeEntry = await program.account.stakeEntry.fetchNullable(stakeEntryPda[0]);
         if(stakeEntry == null)
             await onCreateStakeEntry();
@@ -98,6 +99,7 @@ export const ApiMessage = () => {
             user: publicKey,
             stakeEntry: stakeEntryPda[0],
             vault: vaultPda[0],
+            globalData: globalDataPda[0],
             systemProgram: web3.SystemProgram.programId
         })
         .signers([])
@@ -108,7 +110,7 @@ export const ApiMessage = () => {
     const onUnstake = useCallback(async (amount: number) => {
         if(program === undefined || publicKey === null)return;
         let vaultPda = await calculateVaultDataPda();
-        const globalDataPda = await calculateGlobalDataPda();
+
         let stakeEntryPda = await calculateStakeEntryPda(publicKey);
         const unstakeAmount = new anchor.BN(amount);
         //let ix = 
@@ -116,7 +118,6 @@ export const ApiMessage = () => {
         .accounts({
             user: publicKey,
             stakeEntry: stakeEntryPda[0],
-            globalData: globalDataPda[0],
             vault: vaultPda[0],
             systemProgram: web3.SystemProgram.programId
         })
