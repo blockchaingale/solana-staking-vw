@@ -8,13 +8,6 @@ import { StakingContext } from '../contexts/StakingContext'
 import styles from '../styles/Home.module.css'
 import theme from '../themes/theme'
 import { useIndex } from '../hooks/index.hooks';
-import { useAnchorWallet, useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { solanaConfig } from '../config/solana.config'
-import { ApiMessage, calculateGlobalDataPda } from './api/api'
-import { useCallback, useContext, useEffect, useState } from 'react'
-import * as anchor from '@project-serum/anchor'
-import { Program, web3 } from '@project-serum/anchor'
-import idl from './IDL/idl.json';
 
 const stakingTheme = createTheme(theme);
 
