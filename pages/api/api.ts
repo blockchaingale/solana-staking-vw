@@ -87,7 +87,6 @@ export const ApiMessage = () => {
 
     const onStake = useCallback(async (amount: number) => {
         if(program === undefined || publicKey === null)return;
-        let globalDataPda = await calculateGlobalDataPda();
         let vaultPda = await calculateVaultDataPda();
         let stakeEntryPda = await calculateStakeEntryPda(publicKey);
         let stakeEntry = await program.account.stakeEntry.fetchNullable(stakeEntryPda[0]);
@@ -99,7 +98,6 @@ export const ApiMessage = () => {
             user: publicKey,
             stakeEntry: stakeEntryPda[0],
             vault: vaultPda[0],
-            globalData: globalDataPda[0],
             systemProgram: web3.SystemProgram.programId
         })
         .signers([])
