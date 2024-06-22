@@ -27,7 +27,7 @@ export const useHome = () => {
 
 
     useEffect(() => {
-        if(wallet === undefined)return;
+        if(wallet === undefined || !connection)return;
         let provider: anchor.Provider
         try {
             provider = anchor.getProvider()
