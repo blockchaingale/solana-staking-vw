@@ -31,7 +31,7 @@ export const AdminPanel = () => {
     }
     return (
         <div>
-            <CustomWithdraw balance={feetotal} icon={solIcon}/>
+            <CustomWithdraw balance={feetotal===undefined?'-':feetotal} icon={solIcon}/>
             <div className={styles.stakeAmountContainer}>
             </div>
             <CustomButton fullWidth={true} onClick={onWithdraw}>{'Widthdraw fees'}</CustomButton>
