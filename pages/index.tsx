@@ -15,10 +15,8 @@ import { useCallback, useContext, useEffect, useState } from 'react'
 import * as anchor from '@project-serum/anchor'
 import { Program, web3 } from '@project-serum/anchor'
 import idl from './IDL/idl.json';
-import { useHome } from './api/hook'
 
 const stakingTheme = createTheme(theme);
-const PROGRAM_ID = new anchor.web3.PublicKey(solanaConfig["devnet"].programId);
 
 const Home: NextPage = () => {
     const { apr, endpoint, connection } = useIndex();
