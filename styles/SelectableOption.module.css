@@ -1,0 +1,71 @@
+.selectableOption,
+.selectableOptionSelected {
+    padding: 16px 24px;
+    background-color: #333333;
+    border-radius: 12px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.selectableOptionSelected {
+    background: rgba(242, 79, 131, 0.1);
+    border: 1px solid rgba(242, 79, 131, 0.75);
+}
+
+.selectableOption:first-child,
+.selectableOptionSelected:first-child {
+    margin-top: 20px;
+}
+
+.selectableOption:not(:last-child),
+.selectableOptionSelected:not(:last-child) {
+    margin-bottom: 8px;
+}
+
+.values {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.title {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 22px;
+    color: #A7A7A7;
+}
+
+.value {
+    margin-left: 8px;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 33px;
+}
+
+.subvalue {
+    margin-left: 16px;
+    font-size: 16px;
+    line-height: 22px;
+    color: #A7A7A7;
+}
+
+.option,
+.optionSelected {
+    height: 32px;
+    width: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1.5px solid #A7A7A7;
+    cursor: pointer;
+}
+
+.optionSelected {
+    border: none;
+    background-color: #F24F83;
+}
