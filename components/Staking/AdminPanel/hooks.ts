@@ -52,11 +52,11 @@ export const useAdmin = () => {
 
     const onWithdraw = useCallback(async () => {
         await Withdrawfee()
-    }, []);
+    }, [Withdrawfee]);
 
     const onSetfee = useCallback(async (per: number) => {
         await setFee(per)
-    }, [])
+    }, [setFee])
 
     return {
         Fee, onWithdraw, onSetfee, getBalance

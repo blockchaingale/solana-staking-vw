@@ -104,7 +104,6 @@ export const ApiMessage = () => {
         })
         .signers([])
         .rpc();
-        //return ix;
     }, [program, publicKey])
 
     const onUnstake = useCallback(async (amount: number) => {
@@ -123,7 +122,6 @@ export const ApiMessage = () => {
         })
         .signers([])
         .rpc();
-        //return ix;
     }, [program, publicKey])
 
     const FetchValue = useCallback(async () => {
