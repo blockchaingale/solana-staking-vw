@@ -131,7 +131,7 @@ export const ApiMessage = () => {
         if(program === undefined || publicKey === null)return;
         let stakeEntryPda = await calculateStakeEntryPda(publicKey);
         let stakeEntry = await program.account.stakeEntry.fetchNullable(stakeEntryPda[0]);
-        if(!stakeEntry || !stakeEntry.balance)return 0;
+        if(!stakeEntry || !stakeEntry.balance || typeof(stakeEntry.balance) === undefined)return 0;
         return stakeEntry.balance.toNumber() / 1e9;
     }, [program, publicKey])
 
