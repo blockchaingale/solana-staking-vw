@@ -7,6 +7,7 @@ import { Program, web3 } from '@project-serum/anchor'
 import { calculateGlobalDataPda } from "../../pages/api/api";
 import { solanaConfig } from "../../config/solana.config";
 import { type } from "os";
+import { PublicKey } from "@solana/web3.js";
 const PROGRAM_ID = new anchor.web3.PublicKey(solanaConfig["devnet"].programId);
 export const useHome = () => {
     const { publicKey } = useWallet();
@@ -49,8 +50,10 @@ export const useHome = () => {
             let globalData = await program.account.globalData.fetchNullable(globalDataPda[0]);
  //           console.log(publicKey.toBase58(), globalData.admin.toBase58())
             if(!globalData || !globalData.admin)return;
-            console.log(globalData.admin.toBase58())
-            if(globalData.admin.toBase58() === publicKey.toBase58())return true;
+            if(globalData.admin instanceof PublicKey) {
+                console.log(globalData.admin.toBase58())
+                if(globalData.admin.toBase58() === publicKey.toBase58())return true;
+            }
             return false;
             // console.log(Admin);
         }
