@@ -36,7 +36,7 @@ const Home: NextPage = () => {
                 <SolanaProvider endpoint={endpoint}>
                     {
                     <StakingContext.Provider value={{ apr, connection, stakedToken: "SOL" }}>
-                        <Staking apr={apr}/>
+                        <Staking/>
                     </StakingContext.Provider>
                     }
                 </SolanaProvider>

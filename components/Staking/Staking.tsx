@@ -9,8 +9,10 @@ import { CustomTabs } from '../CustomTabs/CustomTabs';
 import { Typography } from '@mui/material';
 import { useHome } from './hook';
 import { AdminPanel } from './AdminPanel/AdminPanel';
-
-export const Staking = (props) => {
+// export interface CustomProps {
+//     selectedTab: string
+// }
+export const Staking = () => {
     const { selectedTab, handleSelectedTab, depositFee, stakedToken } = useStaking();
     const { IsAdmin } = useHome();
     const [Admin, setAdmin] = useState(false);
@@ -18,6 +20,7 @@ export const Staking = (props) => {
         const fetch = async () => {
             const t = await IsAdmin()
             console.log(t)
+            if(t === undefined)return;
             setAdmin(t)
         }
         fetch()
