@@ -104,7 +104,7 @@ export const ApiMessage = () => {
         })
         .signers([])
         .rpc();
-    }, [program, publicKey])
+    }, [program, publicKey, onCreateStakeEntry])
 
     const onUnstake = useCallback(async (amount: number) => {
         if(program === undefined || publicKey === null)return;
