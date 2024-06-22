@@ -131,8 +131,9 @@ export const ApiMessage = () => {
         if(program === undefined || publicKey === null)return;
         let stakeEntryPda = await calculateStakeEntryPda(publicKey);
         let stakeEntry = await program.account.stakeEntry.fetchNullable(stakeEntryPda[0]);
-        if(!stakeEntry || !stakeEntry.balance || typeof(stakeEntry.balance) === undefined)return 0;
-        return stakeEntry.balance.toNumber() / 1e9;
+        if(!stakeEntry || !stakeEntry.balance )return 0;
+        if(stakeEntry.balance instanceof anchor.BN)
+            return stakeEntry.balance.toNumber() / 1e9;
     }, [program, publicKey])
 
     const FeeTotal = useCallback(async () => {
@@ -141,7 +142,8 @@ export const ApiMessage = () => {
         let globalData = await program.account.globalData.fetchNullable(globalDataPda[0]);
 //           console.log(publicKey.toBase58(), globalData.admin.toBase58())
         if(!globalData || !globalData.feetotal)return 0; 
-        return globalData.feetotal.toNumber() / 1e9;
+        if(globalData.feetotal instanceof anchor.BN)
+            return globalData.feetotal.toNumber() / 1e9;
     }, [program, publicKey])
 
     const Fee = useCallback(async () => {
@@ -150,7 +152,8 @@ export const ApiMessage = () => {
         let globalData = await program.account.globalData.fetchNullable(globalDataPda[0]);
 //           console.log(publicKey.toBase58(), globalData.admin.toBase58())
         if(!globalData || !globalData.fee)return 0; 
-        return globalData.fee.toNumber();
+        if(globalData.fee instanceof anchor.BN)
+            return globalData.fee.toNumber();
     }, [program, publicKey])    
 
     const Withdrawfee = useCallback(async () => {
