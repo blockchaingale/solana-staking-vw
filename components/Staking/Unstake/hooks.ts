@@ -34,6 +34,7 @@ export const useUnstake = () => {
     }, [connection]);
     const Fetch = useCallback(async () => {
         let fetch = await FetchValue();
+        if(!fetch)return;
         setFetch(fetch);
     }, [FetchValue])   
     useEffect(() => {

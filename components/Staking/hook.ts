@@ -47,6 +47,7 @@ export const useHome = () => {
             const globalDataPda = await calculateGlobalDataPda();
             let globalData = await program.account.globalData.fetchNullable(globalDataPda[0]);
  //           console.log(publicKey.toBase58(), globalData.admin.toBase58())
+            if(!globalData || !globalData.admin)return;
             if(globalData.admin.toBase58() === publicKey.toBase58())return true;
             return false;
             // console.log(Admin);
