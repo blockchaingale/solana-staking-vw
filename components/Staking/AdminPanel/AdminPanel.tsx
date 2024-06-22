@@ -19,6 +19,7 @@ export const AdminPanel = () => {
             if(t === undefined)return;
             const t1 = await Fee()
             setFeetotal(t.toString())
+            if(t1 === undefined)return;
             setFee(t1)
         }
         fetch()
