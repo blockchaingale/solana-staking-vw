@@ -131,7 +131,7 @@ export const ApiMessage = () => {
         if(program === undefined || publicKey === null)return;
         let stakeEntryPda = await calculateStakeEntryPda(publicKey);
         let stakeEntry = await program.account.stakeEntry.fetchNullable(stakeEntryPda[0]);
-        if(stakeEntry == null)return 0;
+        if(!stakeEntry || !stakeEntry.balance)return 0;
         return stakeEntry.balance.toNumber() / 1e9;
     }, [program, publicKey])
 
@@ -140,6 +140,7 @@ export const ApiMessage = () => {
         const globalDataPda = await calculateGlobalDataPda();
         let globalData = await program.account.globalData.fetchNullable(globalDataPda[0]);
 //           console.log(publicKey.toBase58(), globalData.admin.toBase58())
+        if(!globalData || !globalData.feetotal)return 0; 
         return globalData.feetotal.toNumber() / 1e9;
     }, [program, publicKey])
 
@@ -148,6 +149,7 @@ export const ApiMessage = () => {
         const globalDataPda = await calculateGlobalDataPda();
         let globalData = await program.account.globalData.fetchNullable(globalDataPda[0]);
 //           console.log(publicKey.toBase58(), globalData.admin.toBase58())
+        if(!globalData || !globalData.fee)return 0; 
         return globalData.fee.toNumber();
     }, [program, publicKey])    
 
