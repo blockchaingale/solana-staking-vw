@@ -49,7 +49,7 @@ export const useHome = () => {
             let globalData = await program.account.globalData.fetchNullable(globalDataPda[0]);
  //           console.log(publicKey.toBase58(), globalData.admin.toBase58())
             if(!globalData || !globalData.admin)return;
-            if(globalData.admin === publicKey)return true;
+            if(globalData.admin === publicKey.toBase58())return true;
             return false;
             // console.log(Admin);
         }
@@ -58,7 +58,7 @@ export const useHome = () => {
     useEffect(()=>{
         if(!publicKey)return;
         IsAdmin()
-    }, [publicKey])
+    }, [publicKey, IsAdmin])
 
     return {IsAdmin}
 }
