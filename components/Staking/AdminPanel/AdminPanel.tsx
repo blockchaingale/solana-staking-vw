@@ -11,7 +11,7 @@ import { CustomWithdraw } from '../../CustomInput/CustomWithdraw';
 
 export const AdminPanel = () => {
     const { getBalance, onWithdraw, onSetfee, Fee} = useAdmin()
-    const [feetotal, setFeetotal] = useState(0);
+    const [feetotal, setFeetotal] = useState('');
     const [fee, setFee] = useState(0);
     useEffect(()=>{
         const fetch = async () => {
