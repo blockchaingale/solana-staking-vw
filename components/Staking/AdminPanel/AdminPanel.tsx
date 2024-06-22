@@ -16,6 +16,7 @@ export const AdminPanel = () => {
     useEffect(()=>{
         const fetch = async () => {
             const t = await getBalance()
+            if(t === undefined)return;
             const t1 = await Fee()
             setFeetotal(t)
             setFee(t1)
