@@ -5,11 +5,14 @@ import { FC, useCallback, useEffect, useState } from 'react';
 import { useAnchorWallet, useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { listItemTextClasses } from '@mui/material';
 import { solanaConfig } from '../../config/solana.config';
+import { findProgramAddressSync } from '@project-serum/anchor/dist/cjs/utils/pubkey';
 // const PROGRAM_ID = new anchor.web3.PublicKey(
 //     `4Ai9X7KFMNSwrqxzvirJ7GjSzcZC2xWTEm67BDynzmi8`
 // )
 const PROGRAM_ID = new anchor.web3.PublicKey(solanaConfig["devnet"].programId);
-
+let mint = new web3.PublicKey('AS9YAgAC1k3nZrEzTqaS9R65NQUzR2RoS44GRdUyehKG');
+let tokenProgram = new web3.PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA');
+let associatedTokenProgram = new web3.PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL');
 export const calculateGlobalDataPda = async () => {
     const prefix = "global-data";
     let seeds = [
@@ -32,6 +35,25 @@ export const calculateStakeEntryPda = async (user: anchor.web3.PublicKey) => {
         Buffer.from(prefix),
         user.toBuffer()
     ];
+    return await web3.PublicKey.findProgramAddressSync(seeds, PROGRAM_ID);
+}
+
+export const calculateStakePoolPda =  async () => {
+    const prefix = "stake-pool";
+    let seeds = [
+        Buffer.from(prefix),
+    ]
+    return await web3.PublicKey.findProgramAddressSync(seeds, PROGRAM_ID);
+}
+
+export const calculateEscrowPda = async () => {
+    const prefix = "reward-escorw";
+    const stakePoolPda = await calculateStakePoolPda();
+    let seeds = [
+        Buffer.from(prefix),
+        mint.toBuffer(),
+        stakePoolPda[0].toBuffer()
+    ]
     return await web3.PublicKey.findProgramAddressSync(seeds, PROGRAM_ID);
 }
 
@@ -67,6 +89,27 @@ export const ApiMessage = () => {
         //     systemProgram: web3.SystemProgram.programId
         // }        
     }, [])
+
+    const onCreateStakePool = useCallback(async () => {
+        if(program === undefined || publicKey === null)return;
+        let stakePoolPda = await calculateStakePoolPda();
+        let escrowPda = await calculateEscrowPda();
+
+        await program.methods
+        .createStakePool()
+        .accounts({
+          creator: publicKey,
+          mint: mint,
+          stakePool: stakePoolPda[0],
+          escrow: escrowPda[0],
+          tokenProgram: tokenProgram,
+          systemProgram: web3.SystemProgram.programId,
+          associatedTokenProgram: associatedTokenProgram,
+          rent: web3.SYSVAR_RENT_PUBKEY
+        })
+        .signers([])
+        .rpc();        
+    }, [program, publicKey])
 
     const onCreateStakeEntry = useCallback(async () => {
         if(program === undefined || publicKey === null)return;
@@ -122,6 +165,38 @@ export const ApiMessage = () => {
         })
         .signers([])
         .rpc();
+    }, [program, publicKey])
+
+    const onClaimRewards = useCallback(async () => {
+        if(program === undefined || publicKey === null)return;
+        let stakeEntryPda = await calculateStakeEntryPda(publicKey);
+        let stakePoolPda = await calculateStakePoolPda();
+        let escrowPda = await calculateEscrowPda();
+        const solana = new web3.Connection('https://devnet.solana.com');
+        let staker = await solana.getTokenAccountsByOwner(publicKey, { mint: mint });
+        //if(staker === null || staker === undefined)return;
+        await program?.methods
+            .claimrewards()
+            .accounts({
+                user: publicKey,
+                stakePool: stakePoolPda[0],
+                stakeEntry: stakeEntryPda[0],
+                staker: staker.value[0].pubkey,
+                vaultTokenAccount: escrowPda[0],
+                mint: mint,
+                tokenProgram: tokenProgram
+            })
+            .signers([])
+            .rpc();
+    }, [program, publicKey])
+
+    const FetchRewards = useCallback(async () => {
+        if(program === undefined || publicKey === null)return;
+        let stakeEntryPda = await calculateStakeEntryPda(publicKey);
+        let stakeEntry = await program.account.stakeEntry.fetchNullable(stakeEntryPda[0]);
+        if(!stakeEntry || !stakeEntry.balance )return 0;
+        if(stakeEntry.rewards instanceof anchor.BN)
+            return stakeEntry.rewards.toNumber();
     }, [program, publicKey])
 
     const FetchValue = useCallback(async () => {
@@ -183,5 +258,5 @@ export const ApiMessage = () => {
         .rpc();
     }, [program, publicKey])
 
-    return { Fee, Initialize, onCreateStakeEntry, onStake, onUnstake, FetchValue, FeeTotal, Withdrawfee, setFee };
+    return { Fee, Initialize, onCreateStakeEntry, onStake, onUnstake, FetchRewards, FetchValue, FeeTotal, Withdrawfee, setFee, onClaimRewards, onCreateStakePool };
 }

@@ -13,7 +13,7 @@ export const solanaConfig: { [s: string]: ClusterConfig } = {
         stakePool: "5oc4nDMhYqP8dB5DW8DHtoLJpcasB19Tacu3GWAMbQAC",
     },
     "devnet": {
-        programId: "BytXykKREDtFbAm3uhdiqo2yxa3kfGhjTfFhWkNgZcVr",
-        stakePool: "5oc4nDMhYqP8dB5DW8DHtoLJpcasB19Tacu3GWAMbQAC",
+        programId: "H3V6xiijQa81CuJs9UWjJ1WsfHiYjpj4Vj5thDxUfXBu",
+        stakePool: "FctdcG2dw29GNDQdsFHHT8TNdRg1fBw76AXziWbKSQmz",
     }
 }

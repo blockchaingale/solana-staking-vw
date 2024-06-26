@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useStaking } from './hooks';
-import { StakingTab } from './types';
+import { StakingTab, stakingTabs } from './types';
 import { Stake } from './Stake/Stake';
 import { Unstake } from './Unstake/Unstake';
 import styles from '../../styles/Staking.module.css';
@@ -9,6 +9,7 @@ import { CustomTabs } from '../CustomTabs/CustomTabs';
 import { Typography } from '@mui/material';
 import { useHome } from './hook';
 import { AdminPanel } from './AdminPanel/AdminPanel';
+import { Claim } from './Claim/Claim';
 // export interface CustomProps {
 //     selectedTab: string
 // }
@@ -43,7 +44,7 @@ export const Staking = () => {
                 <div className={styles.staking}>
                 
                     <CustomTabs selectedTab={selectedTab} onChange={handleSelectedTab} />
-                    {selectedTab === StakingTab.Stake ? <Stake /> : <Unstake />}
+                    {selectedTab === StakingTab.Stake ? <Stake /> : selectedTab === StakingTab.Unstake ? <Unstake /> : <Claim/>}
                     {/* <StakingHelp /> */}
                 </div>
             </>

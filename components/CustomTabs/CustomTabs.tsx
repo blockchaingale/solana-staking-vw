@@ -18,6 +18,9 @@ export const CustomTabs = (props: CustomTabsProps) => {
             <div className={selectedTab === "Unstake" ? styles.tabSelected : styles.tab} onClick={() => onChange(StakingTab.Unstake)}>
                 <label>Unstake</label>
             </div>
+            <div className={selectedTab === "Claim" ? styles.tabSelected : styles.tab} onClick={() => onChange(StakingTab.Claim)}>
+                <label>Claim</label>
+            </div>
         </div>
     );
 };
