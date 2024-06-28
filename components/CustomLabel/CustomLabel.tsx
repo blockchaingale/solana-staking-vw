@@ -2,10 +2,10 @@ import { Button, Icon } from '@mui/material';
 import Image from 'next/image';
 import React from 'react';
 import styles from '../../styles/CustomInput.module.css';
-import { CustomInputProps } from './types';
+import { CustomLabelProps } from './types';
 import { useCustomLabel } from './hooks';
 
-export const CustomLabel = (props: CustomInputProps) => {
+export const CustomLabel = (props: CustomLabelProps) => {
     const { amount } = useCustomLabel(props);
     return (
         <div className={styles.customInputContainer}>
