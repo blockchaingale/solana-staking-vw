@@ -19,7 +19,7 @@ export const useClaim = () => {
     const { publicKey } = useWallet();
     const { visible, setVisible } = useWalletModal();
 
-    const { FetchRewards } = ApiMessage();
+    const { FetchRewards, onClaimRewards } = ApiMessage();
 
     const { connection, stakedToken } = useContext(StakingContext);
 
@@ -45,7 +45,15 @@ export const useClaim = () => {
    
     }, [publicKey, connection, Fetch]);
 
+    const onClick = useCallback(async () => {
+        if (publicKey) {
+            await onClaimRewards();
+        }
+        else {
+            setVisible(!visible);
+        }
+    }, [publicKey, visible, onClaimRewards, setVisible]);
     return {
-        fetchrewards
+        fetchrewards, onClick
     };
 };

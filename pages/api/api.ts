@@ -47,7 +47,7 @@ export const calculateStakePoolPda =  async () => {
 }
 
 export const calculateEscrowPda = async () => {
-    const prefix = "reward-escorw";
+    const prefix = "reward-escrow";
     const stakePoolPda = await calculateStakePoolPda();
     let seeds = [
         Buffer.from(prefix),
@@ -134,6 +134,12 @@ export const ApiMessage = () => {
         let stakeEntryPda = await calculateStakeEntryPda(publicKey);
         let globalDataPda = await calculateGlobalDataPda();
         let stakeEntry = await program.account.stakeEntry.fetchNullable(stakeEntryPda[0]);
+
+        let stakePoolPda = await calculateStakePoolPda();
+        // let staker = await solana.getTokenAccountsByOwner(publicKey, { mint: mint });
+        let staker = new web3.PublicKey('GX5JiNwpWRBZ73KA5mLAcoDrjLndtNtXWi15WhjKZYCh');
+        let escrowPda = await calculateEscrowPda();
+
         if(stakeEntry == null)
             await onCreateStakeEntry();
         const stakeAmount = new anchor.BN(amount);
@@ -143,6 +149,11 @@ export const ApiMessage = () => {
             stakeEntry: stakeEntryPda[0],
             vault: vaultPda[0],
             globalData: globalDataPda[0],
+            stakePool: stakePoolPda[0],
+            staker: staker,
+            vaultTokenAccount: escrowPda[0],
+            mint: mint,
+            tokenProgram: tokenProgram,
             systemProgram: web3.SystemProgram.programId
         })
         .signers([])
@@ -152,15 +163,24 @@ export const ApiMessage = () => {
     const onUnstake = useCallback(async (amount: number) => {
         if(program === undefined || publicKey === null)return;
         let vaultPda = await calculateVaultDataPda();
-
         let stakeEntryPda = await calculateStakeEntryPda(publicKey);
+        let stakePoolPda = await calculateStakePoolPda();
+        // let staker = await solana.getTokenAccountsByOwner(publicKey, { mint: mint });
+        let staker = new web3.PublicKey('GX5JiNwpWRBZ73KA5mLAcoDrjLndtNtXWi15WhjKZYCh');
+        let escrowPda = await calculateEscrowPda();
+
         const unstakeAmount = new anchor.BN(amount);
-        //let ix = 
+
         await program.methods.unstake(unstakeAmount, vaultPda[1])
         .accounts({
             user: publicKey,
             stakeEntry: stakeEntryPda[0],
             vault: vaultPda[0],
+            stakePool: stakePoolPda[0],
+            staker: staker,
+            vaultTokenAccount: escrowPda[0],
+            mint: mint,
+            tokenProgram: tokenProgram,
             systemProgram: web3.SystemProgram.programId
         })
         .signers([])
@@ -172,8 +192,11 @@ export const ApiMessage = () => {
         let stakeEntryPda = await calculateStakeEntryPda(publicKey);
         let stakePoolPda = await calculateStakePoolPda();
         let escrowPda = await calculateEscrowPda();
-        const solana = new web3.Connection('https://devnet.solana.com');
-        let staker = await solana.getTokenAccountsByOwner(publicKey, { mint: mint });
+
+        const solana = new web3.Connection('https://api.devnet.solana.com');
+        let staker1 = await solana.getTokenAccountsByOwner(publicKey, { mint: mint });
+//        let staker = new web3.PublicKey('GX5JiNwpWRBZ73KA5mLAcoDrjLndtNtXWi15WhjKZYCh');
+        console.log(stakePoolPda[0].toBase58(), escrowPda[0].toBase58(), staker1.value[0].pubkey.toBase58());        
         //if(staker === null || staker === undefined)return;
         await program?.methods
             .claimrewards()
@@ -181,7 +204,7 @@ export const ApiMessage = () => {
                 user: publicKey,
                 stakePool: stakePoolPda[0],
                 stakeEntry: stakeEntryPda[0],
-                staker: staker.value[0].pubkey,
+                staker: staker1.value[0].pubkey,
                 vaultTokenAccount: escrowPda[0],
                 mint: mint,
                 tokenProgram: tokenProgram
@@ -258,5 +281,16 @@ export const ApiMessage = () => {
         .rpc();
     }, [program, publicKey])
 
-    return { Fee, Initialize, onCreateStakeEntry, onStake, onUnstake, FetchRewards, FetchValue, FeeTotal, Withdrawfee, setFee, onClaimRewards, onCreateStakePool };
+    const refreshRewards = useCallback(async () => {
+        if(program === undefined || publicKey === null)return;
+        let stakeEntryPda = await calculateStakeEntryPda(publicKey);
+        await program.methods.refreshrewards()
+        .accounts({
+            initializer: publicKey,
+            stakeEntryPda: stakeEntryPda[0]
+        })
+        .signers([])
+        .rpc();
+    }, [program, publicKey])
+    return { Fee, refreshRewards, Initialize, onCreateStakeEntry, onStake, onUnstake, FetchRewards, FetchValue, FeeTotal, Withdrawfee, setFee, onClaimRewards, onCreateStakePool };
 }

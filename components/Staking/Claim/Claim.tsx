@@ -8,13 +8,13 @@ import { CustomButton } from '../../CustomButton/CustomButton';
 import { useClaim } from './hooks';
 
 export const Claim = () => {
-    const { fetchrewards } = useClaim();
+    const { onClick } = useClaim();
     return (
         <div>
-                <CustomLabel amount={fetchrewards}/>
+                {/* <CustomLabel amount={fetchrewards}/>
                 <div className={styles.stakeAmountContainer}>
-                </div>
-                <CustomButton fullWidth={true} >Claim Rewards</CustomButton>
+                </div> */}
+                <CustomButton fullWidth={true} onClick={onClick}>Claim Rewards</CustomButton>
         </div>
     );
 };
