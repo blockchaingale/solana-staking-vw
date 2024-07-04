@@ -136,8 +136,9 @@ export const ApiMessage = () => {
         let stakeEntry = await program.account.stakeEntry.fetchNullable(stakeEntryPda[0]);
 
         let stakePoolPda = await calculateStakePoolPda();
-        // let staker = await solana.getTokenAccountsByOwner(publicKey, { mint: mint });
-        let staker = new web3.PublicKey('GX5JiNwpWRBZ73KA5mLAcoDrjLndtNtXWi15WhjKZYCh');
+        const solana = new web3.Connection('https://api.devnet.solana.com');        
+        let staker = await solana.getTokenAccountsByOwner(publicKey, { mint: mint });
+        //let staker = new web3.PublicKey('GX5JiNwpWRBZ73KA5mLAcoDrjLndtNtXWi15WhjKZYCh');
         let escrowPda = await calculateEscrowPda();
 
         if(stakeEntry == null)
@@ -150,7 +151,7 @@ export const ApiMessage = () => {
             vault: vaultPda[0],
             globalData: globalDataPda[0],
             stakePool: stakePoolPda[0],
-            staker: staker,
+            staker: staker.value[0].pubkey,
             vaultTokenAccount: escrowPda[0],
             mint: mint,
             tokenProgram: tokenProgram,
@@ -165,8 +166,9 @@ export const ApiMessage = () => {
         let vaultPda = await calculateVaultDataPda();
         let stakeEntryPda = await calculateStakeEntryPda(publicKey);
         let stakePoolPda = await calculateStakePoolPda();
-        // let staker = await solana.getTokenAccountsByOwner(publicKey, { mint: mint });
-        let staker = new web3.PublicKey('GX5JiNwpWRBZ73KA5mLAcoDrjLndtNtXWi15WhjKZYCh');
+        const solana = new web3.Connection('https://api.devnet.solana.com');        
+        let staker = await solana.getTokenAccountsByOwner(publicKey, { mint: mint });
+        //let staker = new web3.PublicKey('GX5JiNwpWRBZ73KA5mLAcoDrjLndtNtXWi15WhjKZYCh');
         let escrowPda = await calculateEscrowPda();
 
         const unstakeAmount = new anchor.BN(amount);
@@ -177,7 +179,7 @@ export const ApiMessage = () => {
             stakeEntry: stakeEntryPda[0],
             vault: vaultPda[0],
             stakePool: stakePoolPda[0],
-            staker: staker,
+            staker: staker.value[0].pubkey,
             vaultTokenAccount: escrowPda[0],
             mint: mint,
             tokenProgram: tokenProgram,
@@ -194,9 +196,9 @@ export const ApiMessage = () => {
         let escrowPda = await calculateEscrowPda();
 
         const solana = new web3.Connection('https://api.devnet.solana.com');
-        let staker1 = await solana.getTokenAccountsByOwner(publicKey, { mint: mint });
+        let staker = await solana.getTokenAccountsByOwner(publicKey, { mint: mint });
 //        let staker = new web3.PublicKey('GX5JiNwpWRBZ73KA5mLAcoDrjLndtNtXWi15WhjKZYCh');
-        console.log(stakePoolPda[0].toBase58(), escrowPda[0].toBase58(), staker1.value[0].pubkey.toBase58());        
+        console.log(stakePoolPda[0].toBase58(), escrowPda[0].toBase58(), staker.value[0].pubkey.toBase58());        
         //if(staker === null || staker === undefined)return;
         await program?.methods
             .claimrewards()
@@ -204,7 +206,7 @@ export const ApiMessage = () => {
                 user: publicKey,
                 stakePool: stakePoolPda[0],
                 stakeEntry: stakeEntryPda[0],
-                staker: staker1.value[0].pubkey,
+                staker: staker.value[0].pubkey,
                 vaultTokenAccount: escrowPda[0],
                 mint: mint,
                 tokenProgram: tokenProgram
